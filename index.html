@@ -154,7 +154,273 @@
         </div>
 
         <!-- ================= SUPER ADMIN ================= -->
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unavu Express - Voice-Controlled Food Delivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased pb-20">
+
+    <!-- Top App Header -->
+    <header class="bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-utensils text-xl"></i>
+                <h1 class="text-lg font-bold tracking-tight">Unavu Express</h1>
+            </div>
+            <!-- Role Switcher -->
+            <select id="roleSwitcher" onchange="switchRole(this.value)" class="bg-orange-700 text-white text-xs font-semibold px-2 py-1.5 rounded-lg border border-orange-500 focus:outline-none">
+                <option value="customer">👤 Customer Mode</option>
+                <option value="restaurant">👨‍🍳 Restaurant Portal</option>
+                <option value="delivery">🛵 Delivery Partner</option>
+                <option value="admin">👑 Super Admin</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-md mx-auto px-4 py-4">
+
+        <!-- ================= CUSTOMER VIEW ================= -->
+        <div id="view-customer" class="space-y-4">
+            <div class="flex items-center justify-between bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-location-dot text-orange-600"></i>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Deliver to</p>
+                        <p class="text-sm font-bold text-gray-800">T. Nagar, Chennai</p>
+                    </div>
+                </div>
+                <button onclick="triggerVoiceSearch()" id="micBtn" class="bg-orange-100 text-orange-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-orange-200 transition">
+                    <i class="fa-solid fa-microphone text-base animate-pulse"></i>
+                </button>
+            </div>
+
+            <div id="voiceStatus" class="hidden bg-orange-50 border border-orange-200 text-orange-800 text-xs px-3 py-2 rounded-lg flex items-center space-x-2">
+                <i class="fa-solid fa-waveform text-orange-600"></i>
+                <span id="voiceText">Listening... Try "Biryani add pannu"</span>
+            </div>
+
+            <!-- Restaurants Dynamic List Container -->
+            <div class="space-y-3">
+                <h2 class="text-base font-bold text-gray-800">Popular Restaurants Nearby</h2>
+                <div id="restaurantsList" class="space-y-3">
+                    <!-- Default Hotel -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-28 p-4 text-white flex flex-col justify-between">
+                            <span class="bg-black/30 backdrop-blur-md text-[10px] px-2 py-0.5 rounded-full w-fit">2.4 km • 25 mins</span>
+                            <div>
+                                <h3 class="font-bold text-lg">Hotel Arya Bhavan</h3>
+                                <p class="text-xs text-amber-100">South Indian, Tiffin, Meals</p>
+                            </div>
+                        </div>
+                        <div class="p-3 space-y-3">
+                            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800">Ghee Roast Dosa</p>
+                                    <p class="text-xs font-semibold text-orange-600">₹120</p>
+                                </div>
+                                <button onclick="addToCart('Ghee Roast Dosa', 120, 1)" class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 text-xs font-bold rounded-lg hover:bg-orange-600 hover:text-white transition">ADD +</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= RESTAURANT PORTAL ================= -->
+        <div id="view-restaurant" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-gray-800">👨‍🍳 Kitchen Live Orders</h2>
+                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold">Online</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>Order #UE-8021</span>
+                            <span class="text-orange-600 font-bold">Prep Time: 15 mins</span>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800">1x Chicken Biryani, 2x Ghee Roast</p>
+                        <div class="mt-3 flex space-x-2">
+                            <button onclick="alert('Order Accepted!')" class="bg-green-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">Accept Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= DELIVERY PARTNER ================= -->
+        <div id="view-delivery" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-gray-800">🛵 Delivery Radar</h2>
+                    <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-bold">Geofence Active</span>
+                </div>
+                <div class="p-3 bg-orange-50 border border-orange-200 rounded-xl space-y-2">
+                    <div class="flex justify-between text-xs font-bold text-orange-800">
+                        <span>New Delivery Request</span>
+                        <span>Earn: ₹45 + ₹30 Rain Surge</span>
+                    </div>
+                    <p class="text-xs text-gray-600">Pickup: Arya Bhavan -> Drop: T. Nagar</p>
+                    <button onclick="alert('Delivery Accepted!')" class="w-full bg-orange-600 text-white text-xs font-bold py-2 rounded-lg mt-2">Accept & Navigate</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SUPER ADMIN (ADD RESTAURANT FORM) ================= -->
         <div id="view-admin" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-3">
+                <h2 class="text-base font-bold text-gray-800">👑 Super Admin: Add Restaurant</h2>
+                
+                <!-- Restaurant Registration Form -->
+                <form id="addRestaurantForm" onsubmit="addNewRestaurant(event)" class="space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200">
+                    <div>
+                        <label class="text-xs font-bold text-gray-700">Restaurant Name</label>
+                        <input type="text" id="restName" required placeholder="Eg: Namma Veedu Vasanta Bhavan" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-700">Cuisine Type</label>
+                        <input type="text" id="restCuisine" required placeholder="Eg: South Indian, Meals" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-xs font-bold text-gray-700">Distance & Time</label>
+                            <input type="text" id="restMeta" required placeholder="1.8 km • 20 mins" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700">Special Dish Price (₹)</label>
+                            <input type="number" id="restPrice" required placeholder="140" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-700">Special Dish Name</label>
+                        <input type="text" id="restDish" required placeholder="Mini Meals" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
+                    </div>
+                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 rounded-lg transition">
+                        Add Restaurant to App 🚀
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Floating Cart -->
+    <div id="cartBar" class="hidden fixed bottom-4 left-4 right-4 max-w-md mx-auto bg-gray-900 text-white p-3 rounded-2xl shadow-xl flex items-center justify-between z-50">
+        <div>
+            <p id="cartCount" class="text-xs text-gray-400 font-medium">0 items</p>
+            <p id="cartTotal" class="text-sm font-bold">₹0</p>
+        </div>
+        <button onclick="alert('Redirecting to payment...')" class="bg-orange-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl">
+            Checkout
+        </button>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        let cart = {};
+        let restaurants = [
+            { name: "Hotel Arya Bhavan", cuisine: "South Indian, Tiffin", meta: "2.4 km • 25 mins", dish: "Ghee Roast Dosa", price: 120, id: 1 }
+        ];
+
+        function switchRole(role) {
+            ['customer', 'restaurant', 'delivery', 'admin'].forEach(r => {
+                document.getElementById('view-' + r).classList.add('hidden');
+            });
+            document.getElementById('view-' + role).classList.remove('hidden');
+        }
+
+        function renderRestaurants() {
+            const container = document.getElementById('restaurantsList');
+            container.innerHTML = '';
+            restaurants.forEach((r, idx) => {
+                container.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-28 p-4 text-white flex flex-col justify-between">
+                            <span class="bg-black/30 backdrop-blur-md text-[10px] px-2 py-0.5 rounded-full w-fit">${r.meta}</span>
+                            <div>
+                                <h3 class="font-bold text-lg">${r.name}</h3>
+                                <p class="text-xs text-amber-100">${r.cuisine}</p>
+                            </div>
+                        </div>
+                        <div class="p-3 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800">${r.dish}</p>
+                                    <p class="text-xs font-semibold text-orange-600">₹${r.price}</p>
+                                </div>
+                                <button onclick="addToCart('${r.dish}', ${r.price}, 10${idx})" class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 text-xs font-bold rounded-lg hover:bg-orange-600 hover:text-white transition">ADD +</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addNewRestaurant(event) {
+            event.preventDefault();
+            const name = document.getElementById('restName').value;
+            const cuisine = document.getElementById('restCuisine').value;
+            const meta = document.getElementById('restMeta').value;
+            const dish = document.getElementById('restDish').value;
+            const price = Number(document.getElementById('restPrice').value);
+
+            restaurants.push({ name, cuisine, meta, dish, price, id: restaurants.length + 1 });
+            renderRestaurants();
+            
+            // Switch back to customer view to see the newly added restaurant
+            switchRole('customer');
+            document.getElementById('roleSwitcher').value = 'customer';
+            alert('Restaurant successfully added and live on Unavu Express! 🎉');
+            document.getElementById('addRestaurantForm').reset();
+        }
+
+        function addToCart(name, price, id) {
+            if (!cart[id]) cart[id] = { name, price, qty: 1 };
+            else cart[id].qty += 1;
+            updateCartBar();
+        }
+
+        function updateCartBar() {
+            let totalItems = 0, totalPrice = 0;
+            for (let id in cart) {
+                totalItems += cart[id].qty;
+                totalPrice += cart[id].price * cart[id].qty;
+            }
+            const cartBar = document.getElementById('cartBar');
+            if (totalItems > 0) {
+                cartBar.classList.remove('hidden');
+                document.getElementById('cartCount').innerText = totalItems + ' item(s)';
+                document.getElementById('cartTotal').innerText = '₹' + totalPrice;
+            } else {
+                cartBar.classList.add('hidden');
+            }
+        }
+
+        function triggerVoiceSearch() {
+            const status = document.getElementById('voiceStatus');
+            status.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('voiceText').innerText = "Heard: 'Biryani add pannu'";
+                setTimeout(() => status.classList.add('hidden'), 2000);
+            }, 1500);
+        }
+
+        renderRestaurants();
+    </script>
+</body>
+</html>
+        
+    <div id="view-admin" class="hidden space-y-4">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-3">
                 <h2 class="text-base font-bold text-gray-800">👑 Super Admin Control Panel</h2>
                 <div class="grid grid-cols-2 gap-3">
