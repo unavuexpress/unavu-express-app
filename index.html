@@ -149,10 +149,14 @@
 
     <script>
         let cart = {};
-        let restaurants = [
+        
+        // Default restaurants or load from localStorage
+        let defaultRestaurants = [
             { id: 1, name: "Hotel Arya Bhavan", cuisine: "South Indian, Tiffin", meta: "2.4 km • 25 mins", dish: "Ghee Roast Dosa", price: 120 },
             { id: 2, name: "Namma Veedu Vasanta Bhavan", cuisine: "South Indian, Meals", meta: "1.8 km • 20 mins", dish: "Mini Meals", price: 140 }
         ];
+
+        let restaurants = JSON.parse(localStorage.getItem('unavu_restaurants')) || defaultRestaurants;
 
         function switchRole(role) {
             ['customer', 'restaurant', 'delivery', 'admin'].forEach(r => {
@@ -194,12 +198,17 @@
             const dish = document.getElementById('restDish').value;
             const price = Number(document.getElementById('restPrice').value);
 
-            restaurants.push({ id: Date.now(), name, cuisine, meta, dish, price });
+            const newRest = { id: Date.now(), name, cuisine, meta, dish, price };
+            restaurants.push(newRest);
+            
+            // Save to browser localStorage so it persists!
+            localStorage.setItem('unavu_restaurants', JSON.stringify(restaurants));
+
             renderRestaurants();
             
             switchRole('customer');
             document.getElementById('roleSwitcher').value = 'customer';
-            alert('Restaurant successfully added!');
+            alert('Restaurant successfully added and saved live! 🎉');
             document.getElementById('addRestaurantForm').reset();
         }
 
