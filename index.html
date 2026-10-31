@@ -150,7 +150,6 @@
     <script>
         let cart = {};
         
-        // Default restaurants or load from localStorage
         let defaultRestaurants = [
             { id: 1, name: "Hotel Arya Bhavan", cuisine: "South Indian, Tiffin", meta: "2.4 km • 25 mins", dish: "Ghee Roast Dosa", price: 120 },
             { id: 2, name: "Namma Veedu Vasanta Bhavan", cuisine: "South Indian, Meals", meta: "1.8 km • 20 mins", dish: "Mini Meals", price: 140 }
@@ -182,7 +181,9 @@
                                     <p class="text-sm font-bold text-gray-800">${r.dish}</p>
                                     <p class="text-xs font-semibold text-orange-600">₹${r.price}</p>
                                 </div>
-                                <button onclick="addToCart('${r.dish}', ${r.price}, ${r.id})" class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 text-xs font-bold rounded-lg hover:bg-orange-600 hover:text-white transition">ADD +</button>
+                                <div id="item-control-${r.id}">
+                                    <button onclick="addToCart('${r.dish}', ${r.price}, ${r.id})" class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 text-xs font-bold rounded-lg hover:bg-orange-600 hover:text-white transition">ADD +</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -200,12 +201,9 @@
 
             const newRest = { id: Date.now(), name, cuisine, meta, dish, price };
             restaurants.push(newRest);
-            
-            // Save to browser localStorage so it persists!
             localStorage.setItem('unavu_restaurants', JSON.stringify(restaurants));
 
             renderRestaurants();
-            
             switchRole('customer');
             document.getElementById('roleSwitcher').value = 'customer';
             alert('Restaurant successfully added and saved live! 🎉');
@@ -213,9 +211,51 @@
         }
 
         function addToCart(name, price, id) {
-            if (!cart[id]) cart[id] = { name, price, qty: 1 };
-            else cart[id].qty += 1;
+            if (!cart[id]) {
+                cart[id] = { name, price, qty: 1 };
+            } else {
+                cart[id].qty += 1;
+            }
+            updateUI(id);
             updateCartBar();
+        }
+
+        function changeQty(id, delta) {
+            if (cart[id]) {
+                cart[id].qty += delta;
+                if (cart[id].qty <= 0) {
+                    delete cart[id];
+                    resetItemButton(id);
+                } else {
+                    updateUI(id);
+                }
+                updateCartBar();
+            }
+        }
+
+        function updateUI(id) {
+            const container = document.getElementById('item-control-' + id);
+            if (container && cart[id]) {
+                container.innerHTML = `
+                    <div class="flex items-center space-x-2 bg-orange-600 text-white rounded-lg px-2 py-1">
+                        <button onclick="changeQty(${id}, -1)" class="font-bold px-1 text-xs">-</button>
+                        <span class="text-xs font-bold">${cart[id].qty}</span>
+                        <button onclick="changeQty(${id}, 1)" class="font-bold px-1 text-xs">+</button>
+                    </div>
+                `;
+            }
+        }
+
+        function resetItemButton(id) {
+            const container = document.getElementById('item-control-' + id);
+            if (container) {
+                const item = restaurants.find(r => r.id === id);
+                if (item) {
+                    container.innerHTML = `
+                        <button onclick="addToCart('${item.dish}', ${item.price}, ${item.id})" class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 text-xs font-bold rounded-lg hover:bg-orange-600 hover:text-white transition">ADD +</button>
+                    `;
+                }
+            }
         }
 
         function updateCartBar() {
