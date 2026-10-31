@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unavu Express - Voice-Controlled Food Delivery</title>
+    <title>Unavu Express - Professional Food Delivery Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,18 +11,18 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased pb-20">
+<body class="bg-gray-50 text-gray-800 antialiased pb-24">
 
     <!-- Top App Header -->
-    <header class="bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-md sticky top-0 z-50">
+    <header class="bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-utensils text-xl"></i>
-                <h1 class="text-lg font-bold tracking-tight">Unavu Express</h1>
+                <h1 class="text-base font-bold tracking-tight">Unavu Express</h1>
             </div>
             <!-- Role Switcher -->
-            <select id="roleSwitcher" onchange="switchRole(this.value)" class="bg-orange-700 text-white text-xs font-semibold px-2 py-1.5 rounded-lg border border-orange-500 focus:outline-none">
-                <option value="customer">👤 Customer Mode</option>
+            <select id="roleSwitcher" onchange="switchRole(this.value)" class="bg-orange-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-orange-500 focus:outline-none shadow-sm">
+                <option value="customer">👤 Customer View</option>
                 <option value="restaurant">👨‍🍳 Restaurant Portal</option>
                 <option value="delivery">🛵 Delivery Partner</option>
                 <option value="admin">👑 Super Admin</option>
@@ -30,104 +30,113 @@
         </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- Main App Container -->
     <main class="max-w-md mx-auto px-4 py-4 space-y-4">
 
-        <!-- CUSTOMER VIEW -->
+        <!-- ================= CUSTOMER VIEW ================= -->
         <div id="view-customer" class="space-y-4">
-            <div class="flex items-center justify-between bg-white p-3 rounded-xl shadow-sm border border-gray-100">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-location-dot text-orange-600"></i>
+            <!-- Location & Voice Search Trigger -->
+            <div class="flex items-center justify-between bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex items-center space-x-2.5">
+                    <div class="bg-orange-50 p-2 rounded-xl text-orange-600">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
                     <div>
-                        <p class="text-xs text-gray-400 font-medium">Deliver to</p>
-                        <p class="text-sm font-bold text-gray-800">T. Nagar, Chennai</p>
+                        <p class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Deliver to</p>
+                        <p class="text-xs font-bold text-gray-800">T. Nagar, Chennai</p>
                     </div>
                 </div>
-                <button onclick="triggerVoiceSearch()" id="micBtn" class="bg-orange-100 text-orange-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-orange-200 transition">
-                    <i class="fa-solid fa-microphone text-base animate-pulse"></i>
+                <button onclick="triggerVoiceSearch()" class="bg-orange-100 text-orange-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-orange-200 transition shadow-inner">
+                    <i class="fa-solid fa-microphone text-sm animate-pulse"></i>
                 </button>
             </div>
 
-            <div id="voiceStatus" class="hidden bg-orange-50 border border-orange-200 text-orange-800 text-xs px-3 py-2 rounded-lg flex items-center space-x-2">
-                <i class="fa-solid fa-waveform text-orange-600"></i>
-                <span id="voiceText">Listening... Try "Biryani add pannu"</span>
+            <!-- Voice Feedback Banner -->
+            <div id="voiceStatus" class="hidden bg-orange-50 border border-orange-200 text-orange-800 text-xs px-3.5 py-2.5 rounded-xl flex items-center space-x-2.5 shadow-sm">
+                <i class="fa-solid fa-waveform text-orange-600 text-base"></i>
+                <span id="voiceText" class="font-medium">Listening... Try voice command</span>
             </div>
 
-            <!-- Restaurants List -->
+            <!-- Dynamic Restaurants & Menu List -->
             <div class="space-y-3">
-                <h2 class="text-base font-bold text-gray-800">Popular Restaurants Nearby</h2>
+                <div class="flex justify-between items-center px-1">
+                    <h2 class="text-sm font-bold text-gray-800 uppercase tracking-wide">Popular Restaurants</h2>
+                    <span class="text-[11px] text-orange-600 font-bold">Live Near You</span>
+                </div>
                 <div id="restaurantsList" class="space-y-4"></div>
             </div>
         </div>
 
-        <!-- RESTAURANT PORTAL -->
+        <!-- ================= RESTAURANT PORTAL ================= -->
         <div id="view-restaurant" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-base font-bold text-gray-800">👨‍🍳 Kitchen Live Orders</h2>
-                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold">Online</span>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-sm font-bold text-gray-800">👨‍🍳 Kitchen Live Orders</h2>
+                    <span class="bg-emerald-100 text-emerald-700 text-[11px] px-2.5 py-1 rounded-full font-bold">Kitchen Open</span>
                 </div>
-                <div class="space-y-3">
-                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <div class="flex justify-between text-xs text-gray-500 mb-1">
-                            <span>Order #UE-8021</span>
-                            <span class="text-orange-600 font-bold">Prep Time: 15 mins</span>
-                        </div>
-                        <p class="text-sm font-bold text-gray-800">1x Chicken Biryani, 2x Ghee Roast</p>
-                        <div class="mt-3 flex space-x-2">
-                            <button onclick="alert('Order Accepted!')" class="bg-green-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">Accept Order</button>
-                        </div>
+                <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-200 space-y-2">
+                    <div class="flex justify-between text-xs text-gray-500 font-medium">
+                        <span>Order #UE-8021</span>
+                        <span class="text-orange-600 font-bold">Prep Time: 15 mins</span>
+                    </div>
+                    <p class="text-sm font-bold text-gray-800">1x Chicken Biryani, 2x Ghee Roast</p>
+                    <div class="pt-2 flex space-x-2">
+                        <button onclick="alert('Order Accepted & Sent to Kitchen!')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-lg transition shadow-sm">Accept Order</button>
+                        <button onclick="alert('Order Rejected')" class="bg-red-50 text-red-600 text-xs font-bold px-3 py-2 rounded-lg border border-red-200 transition">Reject</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- DELIVERY PARTNER VIEW -->
+        <!-- ================= DELIVERY PARTNER VIEW ================= -->
         <div id="view-delivery" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-base font-bold text-gray-800">🛵 Delivery Radar</h2>
-                    <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-bold">Geofence Active</span>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-sm font-bold text-gray-800">🛵 Delivery Radar</h2>
+                    <span class="bg-blue-100 text-blue-700 text-[11px] px-2.5 py-1 rounded-full font-bold">Geofence Active</span>
                 </div>
-                <div class="p-3 bg-orange-50 border border-orange-200 rounded-xl space-y-2">
-                    <div class="flex justify-between text-xs font-bold text-orange-800">
+                <div class="p-3.5 bg-orange-50 border border-orange-200 rounded-xl space-y-2.5">
+                    <div class="flex justify-between text-xs font-bold text-orange-900">
                         <span>New Delivery Request</span>
-                        <span>Earn: ₹45 + ₹30 Rain Surge</span>
+                        <span class="text-emerald-700">Earn: ₹45 + ₹30 Surge</span>
                     </div>
-                    <p class="text-xs text-gray-600">Pickup: Arya Bhavan -> Drop: T. Nagar</p>
-                    <button onclick="alert('Delivery Accepted!')" class="w-full bg-orange-600 text-white text-xs font-bold py-2 rounded-lg mt-2">Accept & Navigate</button>
+                    <p class="text-xs text-gray-600 font-medium">Pickup: Hotel Arya Bhavan -> Drop: T. Nagar</p>
+                    <button onclick="alert('Delivery Accepted! Navigation started.')" class="w-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-sm">Accept & Navigate</button>
                 </div>
             </div>
         </div>
 
-        <!-- SUPER ADMIN FORM -->
+        <!-- ================= SUPER ADMIN FORM ================= -->
         <div id="view-admin" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-3">
-                <h2 class="text-base font-bold text-gray-800">👑 Super Admin: Add Restaurant</h2>
-                <form id="addRestaurantForm" onsubmit="addNewRestaurant(event)" class="space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-sm font-bold text-gray-800">👑 Super Admin: Add Restaurant</h2>
+                    <button onclick="resetDefaultRestaurants()" class="text-[10px] text-red-600 font-bold hover:underline">Reset Default</button>
+                </div>
+                <form id="addRestaurantForm" onsubmit="addNewRestaurant(event)" class="space-y-3 bg-gray-50 p-3.5 rounded-xl border border-gray-200">
                     <div>
                         <label class="text-xs font-bold text-gray-700">Restaurant Name</label>
-                        <input type="text" id="restName" required placeholder="Eg: Vasanta Bhavan" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none">
+                        <input type="text" id="restName" required placeholder="Eg: Vasanta Bhavan" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
                     </div>
                     <div>
                         <label class="text-xs font-bold text-gray-700">Cuisine Type</label>
-                        <input type="text" id="restCuisine" required placeholder="Eg: South Indian, Meals" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none">
+                        <input type="text" id="restCuisine" required placeholder="Eg: South Indian, Meals" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="text-xs font-bold text-gray-700">Distance & Time</label>
-                            <input type="text" id="restMeta" required placeholder="1.8 km • 20 mins" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none">
+                            <input type="text" id="restMeta" required placeholder="1.8 km • 20 mins" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
                         </div>
                         <div>
                             <label class="text-xs font-bold text-gray-700">Dish Price (₹)</label>
-                            <input type="number" id="restPrice" required placeholder="140" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none">
+                            <input type="number" id="restPrice" required placeholder="140" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
                         </div>
                     </div>
                     <div>
                         <label class="text-xs font-bold text-gray-700">Special Dish Name</label>
-                        <input type="text" id="restDish" required placeholder="Mini Meals" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none">
+                        <input type="text" id="restDish" required placeholder="Mini Meals" class="w-full mt-1 px-3 py-2 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-orange-600">
                     </div>
-                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 rounded-lg transition">
+                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-sm">
                         Add Restaurant to Live App 🚀
                     </button>
                 </form>
@@ -136,17 +145,18 @@
 
     </main>
 
-    <!-- Floating Cart -->
-    <div id="cartBar" class="hidden fixed bottom-4 left-4 right-4 max-w-md mx-auto bg-gray-900 text-white p-3 rounded-2xl shadow-xl flex items-center justify-between z-50">
+    <!-- Floating Cart Bar -->
+    <div id="cartBar" class="hidden fixed bottom-4 left-4 right-4 max-w-md mx-auto bg-gray-900 text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between z-50 border border-gray-800">
         <div>
-            <p id="cartCount" class="text-xs text-gray-400 font-medium">0 items</p>
+            <p id="cartCount" class="text-[11px] text-gray-400 font-medium">0 items</p>
             <p id="cartTotal" class="text-sm font-bold">₹0</p>
         </div>
-        <button onclick="alert('Redirecting to payment...')" class="bg-orange-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl">
-            Checkout
+        <button onclick="alert('Redirecting to secure Razorpay gateway...')" class="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm">
+            Checkout Now
         </button>
     </div>
 
+    <!-- Core JavaScript Logic -->
     <script>
         let cart = {};
         
@@ -167,22 +177,38 @@
         function renderRestaurants() {
             const container = document.getElementById('restaurantsList');
             container.innerHTML = '';
+            
             restaurants.forEach((r) => {
-                container.innerHTML += `
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4 text-white">
-                            <span class="bg-black/30 text-[10px] px-2 py-0.5 rounded-full">${r.meta}</span>
-                            <h3 class="font-bold text-lg mt-1">${r.name}</h3>
-                            <p class="text-xs text-amber-100">${r.cuisine}</p>
+                let currentQty = cart[r.id] ? cart[r.id].qty : 0;
+                
+                let actionHtml = '';
+                if (currentQty === 0) {
+                    actionHtml = `<button onclick="addToCart(${r.id})" class="bg-orange-50 text-orange-600 border border-orange-200 px-3.5 py-1.5 text-xs font-bold rounded-xl hover:bg-orange-600 hover:text-white transition shadow-sm">ADD +</button>`;
+                } else {
+                    actionHtml = `
+                        <div class="flex items-center space-x-2 bg-orange-600 text-white rounded-xl px-2.5 py-1 shadow-sm">
+                            <button onclick="changeQty(${r.id}, -1)" class="font-bold px-1 text-xs">-</button>
+                            <span class="text-xs font-bold">${currentQty}</span>
+                            <button onclick="changeQty(${r.id}, 1)" class="font-bold px-1 text-xs">+</button>
                         </div>
-                        <div class="p-3">
+                    `;
+                }
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4 text-white">
+                            <span class="bg-black/30 backdrop-blur-md text-[10px] px-2.5 py-0.5 rounded-full font-medium">${r.meta}</span>
+                            <h3 class="font-bold text-base mt-1.5">${r.name}</h3>
+                            <p class="text-xs text-amber-100 font-medium">${r.cuisine}</p>
+                        </div>
+                        <div class="p-3.5">
                             <div class="flex justify-between items-center">
                                 <div>
                                     <p class="text-sm font-bold text-gray-800">${r.dish}</p>
-                                    <p class="text-xs font-semibold text-orange-600">₹${r.price}</p>
+                                    <p class="text-xs font-semibold text-orange-600 mt-0.5">₹${r.price}</p>
                                 </div>
                                 <div id="item-control-${r.id}">
-                                    <button onclick="addToCart('${r.dish}', ${r.price}, ${r.id})" class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 text-xs font-bold rounded-lg hover:bg-orange-600 hover:text-white transition">ADD +</button>
+                                    ${actionHtml}
                                 </div>
                             </div>
                         </div>
@@ -210,13 +236,26 @@
             document.getElementById('addRestaurantForm').reset();
         }
 
-        function addToCart(name, price, id) {
+        function resetDefaultRestaurants() {
+            if (confirm('Reset to default restaurants?')) {
+                localStorage.removeItem('unavu_restaurants');
+                restaurants = defaultRestaurants;
+                cart = {};
+                renderRestaurants();
+                updateCartBar();
+            }
+        }
+
+        function addToCart(id) {
+            const item = restaurants.find(r => r.id === id);
+            if (!item) return;
+
             if (!cart[id]) {
-                cart[id] = { name, price, qty: 1 };
+                cart[id] = { name: item.dish, price: item.price, qty: 1 };
             } else {
                 cart[id].qty += 1;
             }
-            updateUI(id);
+            renderRestaurants();
             updateCartBar();
         }
 
@@ -225,36 +264,9 @@
                 cart[id].qty += delta;
                 if (cart[id].qty <= 0) {
                     delete cart[id];
-                    resetItemButton(id);
-                } else {
-                    updateUI(id);
                 }
+                renderRestaurants();
                 updateCartBar();
-            }
-        }
-
-        function updateUI(id) {
-            const container = document.getElementById('item-control-' + id);
-            if (container && cart[id]) {
-                container.innerHTML = `
-                    <div class="flex items-center space-x-2 bg-orange-600 text-white rounded-lg px-2 py-1">
-                        <button onclick="changeQty(${id}, -1)" class="font-bold px-1 text-xs">-</button>
-                        <span class="text-xs font-bold">${cart[id].qty}</span>
-                        <button onclick="changeQty(${id}, 1)" class="font-bold px-1 text-xs">+</button>
-                    </div>
-                `;
-            }
-        }
-
-        function resetItemButton(id) {
-            const container = document.getElementById('item-control-' + id);
-            if (container) {
-                const item = restaurants.find(r => r.id === id);
-                if (item) {
-                    container.innerHTML = `
-                        <button onclick="addToCart('${item.dish}', ${item.price}, ${item.id})" class="bg-orange-50 text-orange-600 border border-orange-200 px-3 py-1 text-xs font-bold rounded-lg hover:bg-orange-600 hover:text-white transition">ADD +</button>
-                    `;
-                }
             }
         }
 
@@ -267,7 +279,7 @@
             const cartBar = document.getElementById('cartBar');
             if (totalItems > 0) {
                 cartBar.classList.remove('hidden');
-                document.getElementById('cartCount').innerText = totalItems + ' item(s)';
+                document.getElementById('cartCount').innerText = totalItems + ' item(s) in cart';
                 document.getElementById('cartTotal').innerText = '₹' + totalPrice;
             } else {
                 cartBar.classList.add('hidden');
@@ -278,8 +290,11 @@
             const status = document.getElementById('voiceStatus');
             status.classList.remove('hidden');
             setTimeout(() => {
-                document.getElementById('voiceText').innerText = "Heard: 'Biryani add pannu'";
-                setTimeout(() => status.classList.add('hidden'), 2000);
+                document.getElementById('voiceText').innerText = "Heard: 'Ghee Roast Dosa add pannu'";
+                if (restaurants.length > 0) {
+                    addToCart(restaurants[0].id);
+                }
+                setTimeout(() => status.classList.add('hidden'), 2500);
             }, 1500);
         }
 
